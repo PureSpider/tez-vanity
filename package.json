@@ -1,0 +1,22 @@
+{
+  "name": "tez-vanity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "start": "cross-env SEARCH=Pure node index.js"
+  },
+  "author": "PureSpider",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "dotenv-safe": "^8.2.0",
+    "listr2": "^5.0.5",
+    "sotez": "^9.0.0",
+    "time-constants": "^1.0.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}
