@@ -1,5 +1,7 @@
 const { workerData, parentPort } = require("worker_threads");
 
+const { randomBytes } = require("crypto");
+
 const sotez = require("sotez");
 const cryptoUtils = sotez.cryptoUtils;
 
@@ -15,8 +17,8 @@ const main = async () => {
     Atomics.add(workerData.data, 0, 1); // total attempts
     attempts++;
 
-    const mnemonic = cryptoUtils.generateMnemonic();
-    result = await cryptoUtils.generateKeys(mnemonic);
+    const privateKey = randomBytes(64);
+    result = await cryptoUtils.extractKeys(sotez.b58cencode(privateKey, sotez.constants.prefix["edsk"]));
 
     pkh = result.pkh;
 
