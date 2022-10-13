@@ -4,8 +4,6 @@ const { Worker } = require("worker_threads");
 
 const os = require("os");
 
-const SECOND = require("time-constants").SECOND;
-
 const { Listr } = require("listr2");
 
 const search = process.env.SEARCH;
@@ -13,7 +11,6 @@ const search = process.env.SEARCH;
 console.log("Searching for '" + search + "'");
 console.log("");
 
-let ticks = 0;
 let rate = 0;
 
 const start = Date.now();

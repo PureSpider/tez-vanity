@@ -5,13 +5,11 @@ specifiers:
   dotenv-safe: ^8.2.0
   listr2: ^5.0.5
   sotez: ^9.0.0
-  time-constants: ^1.0.3
 
 dependencies:
   dotenv-safe: 8.2.0
   listr2: 5.0.5
   sotez: 9.0.0
-  time-constants: 1.0.3
 
 devDependencies:
   cross-env: 7.0.3
@@ -573,10 +571,6 @@ packages:
 
   /through/2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
-    dev: false
-
-  /time-constants/1.0.3:
-    resolution: {integrity: sha512-cppe5TusAujrdnXmbUWuCe89oSjBJVyhndrceWvELg0WLmlv3/IRlo9cx8sBgRgmMmiC/D0NKspJg+tCc92Xug==}
     dev: false
 
   /tslib/2.4.0:
