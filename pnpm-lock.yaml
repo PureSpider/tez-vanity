@@ -3,11 +3,13 @@ lockfileVersion: 5.4
 specifiers:
   cross-env: ^7.0.3
   dotenv-safe: ^8.2.0
+  keypress: ^0.2.1
   listr2: ^5.0.5
   sotez: ^9.0.0
 
 dependencies:
   dotenv-safe: 8.2.0
+  keypress: 0.2.1
   listr2: 5.0.5
   sotez: 9.0.0
 
@@ -334,6 +336,10 @@ packages:
     dependencies:
       node-fetch: 2.6.1
       whatwg-fetch: 3.6.2
+    dev: false
+
+  /keypress/0.2.1:
+    resolution: {integrity: sha512-HjorDJFNhnM4SicvaUXac0X77NiskggxJdesG72+O5zBKpSqKFCrqmndKVqpu3pFqkla0St6uGk8Ju0sCurrmg==}
     dev: false
 
   /libsodium-sumo/0.7.9:

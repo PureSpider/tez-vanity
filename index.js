@@ -1,5 +1,8 @@
 require("dotenv-safe").config();
 
+var keypress = require('keypress');
+keypress(process.stdin);
+
 const { Worker } = require("worker_threads");
 
 const os = require("os");
@@ -8,12 +11,13 @@ const { Listr } = require("listr2");
 
 const search = process.env.SEARCH;
 
+const start = Date.now();
+
 console.log("Searching for '" + search + "'");
+console.log("Started at " + new Date(start).toString());
 console.log("");
 
 let rate = 0;
-
-const start = Date.now();
 
 console.time("vanity");
 
@@ -22,7 +26,7 @@ const workerData = {};
 workerData.search = search;
 workerData.data = new Int32Array(
   // 0 = attempts
-  // 1 = ticks
+  // 1 = paused flag
   // 2 = done
   new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT * 3)
 );
@@ -44,7 +48,7 @@ os.cpus().forEach((cpu, idx) => {
         const worker = new Worker("./worker.js", { workerData });
 
         const interval = setInterval(() => {
-          task.title = "#" + idx + ": " + attempts + " hashes";
+          task.title = "#" + idx + ": " + attempts.toLocaleString() + " hashes";
         }, updateRate);
 
         worker.on("message", (data) => {
@@ -75,9 +79,12 @@ workerTasks.push({
 
         const total = Atomics.load(workerData.data, 0);
 
-        rate = (total / (passed / 1000)).toFixed(2);
+        rate = (total / (passed / 1000)).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
 
-        task.title = total.toLocaleString() + " hashes, " + rate + " hashes/s";
+        task.title = total.toLocaleString() + " hashes, " + rate + " hashes/s - press P to pause";
 
         if (result) {
           clearInterval(interval);
@@ -96,5 +103,26 @@ workerTasks.push({
 });
 
 const tasks = new Listr(workerTasks, { concurrent: true });
+
+process.stdin.on('keypress', function (ch, key) {
+  if (key && key.ctrl && key.name == 'c') {
+    process.exit();
+  }
+
+  if (key && key.name == 'p') {
+    // toggle pause state
+    const old = Atomics.xor(workerData.data, 1, 1);
+
+    // if old value was "paused",
+    // then new value is "not paused"
+    // -> wake up worker threads
+    if (old == 1) {
+      Atomics.notify(workerData.data, 1);
+    }
+  }
+});
+ 
+process.stdin.setRawMode(true);
+process.stdin.resume();
 
 tasks.run();

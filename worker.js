@@ -14,24 +14,28 @@ const main = async () => {
   let found = false;
 
   while (!Atomics.load(workerData.data, 2)) {
-    Atomics.add(workerData.data, 0, 1); // total attempts
-    attempts++;
+    const ret = Atomics.wait(workerData.data, 1, 1); // 1 = pause
 
-    const privateKey = randomBytes(64);
-    result = await cryptoUtils.extractKeys(sotez.b58cencode(privateKey, sotez.constants.prefix["edsk"]));
-
-    pkh = result.pkh;
-
-    parentPort.postMessage({ attempts });
-
-    if (
-      pkh.startsWith("tz1" + workerData.search) ||
-      pkh.endsWith(workerData.search)
-    ) {
-      Atomics.store(workerData.data, 2, 1); // done
-
-      found = true;
-      parentPort.postMessage({ result });
+    if (ret == "not-equal") {
+      Atomics.add(workerData.data, 0, 1); // total attempts
+      attempts++;
+  
+      const privateKey = randomBytes(64);
+      result = await cryptoUtils.extractKeys(sotez.b58cencode(privateKey, sotez.constants.prefix["edsk"]));
+  
+      pkh = result.pkh;
+  
+      parentPort.postMessage({ attempts });
+  
+      if (
+        pkh.startsWith("tz1" + workerData.search) ||
+        pkh.endsWith(workerData.search)
+      ) {
+        Atomics.store(workerData.data, 2, 1); // done
+  
+        found = true;
+        parentPort.postMessage({ result });
+      }
     }
   }
 
