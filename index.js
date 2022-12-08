@@ -9,6 +9,8 @@ const os = require("os");
 
 const { Listr } = require("listr2");
 
+const alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+
 const search = process.env.SEARCH;
 
 const start = Date.now();
@@ -16,6 +18,19 @@ const start = Date.now();
 console.log("Searching for '" + search + "'");
 console.log("Started at " + new Date(start).toString());
 console.log("");
+
+let currentSearch = search;
+
+while (currentSearch) {
+    var alphabetPosition = alphabet.indexOf(currentSearch[0]);
+
+    if (alphabetPosition < 0) {
+        console.error("Can't find \"" + currentSearch[0] + '" in the alphabet: "' + alphabet + '"');
+        process.exit(1);
+    }
+
+    currentSearch = currentSearch.substring(1);
+}
 
 let rate = 0;
 
